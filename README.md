@@ -66,7 +66,7 @@ pip install -r requirements.txt
 This script reads your private API URL from a `.env` file. A template (`example.env`) is provided. You just need to copy it.
 
 *In your Windows Command Prompt:*
-```bash
+```DOS
 copy example.env .env
 ```
 *On Linux / Mac:*
