@@ -28,14 +28,23 @@ Install dependencies:
 pip install pandas openpyxl
 ```
 
-## How to run
+## Get the repository
 
-### 0️⃣ Clone the repository
-
+### 1️⃣ Using Git (recommended if Git is installed)
 ```bash
 git clone https://github.com/a6002k/telco-api-automation-demo.git
 cd telco-api-automation-demo
 ```
+### 2️⃣ Download ZIP (if Git is not installed)
+- Go to the repository page: https://github.com/a6002k/telco-api-automation-demo
+- Click Code → Download ZIP
+- Unzip the downloaded file to any folder
+- Open CMD or PowerShell and navigate to the folder:
+```cmd
+cd path\to\unzipped\folder
+```
+
+## How to run
 
 ### 1️⃣ Using mock data (default)
 
