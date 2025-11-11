@@ -16,8 +16,46 @@ using built-in mock data by default.
 - `LICENSE` — MIT license.
 - `sims_data_*.xlsx` — sample XLSX files generated when running the script.
 
-## How to run (locally)
+## Requirements
 
-1. Install Python 3.8+ and pandas:
-   ```bash
-   pip install pandas
+- Python 3.8+
+- pandas
+- openpyxl (for XLSX export)
+
+Install dependencies:
+
+```bash
+pip install pandas openpyxl
+```
+
+## How to run
+## 1️⃣ Using mock data (default)
+
+```bash
+python safe_demo_telco_api.py
+```
+
+## 2️⃣ Using the working demo API
+
+Set the environment variable DEMO_API_URL to fetch real JSON from the safe demo API.
+
+**Windows CMD:**
+
+```bash
+set DEMO_API_URL=https://mocki.io/v1/d1b5ec31-b1cb-4a7c-88ef-4307cfd17aa8
+python safe_demo_telco_api.py
+```
+
+**Linux / Mac:**
+
+```bash
+export DEMO_API_URL="https://mocki.io/v1/d1b5ec31-b1cb-4a7c-88ef-4307cfd17aa8"
+python safe_demo_telco_api.py
+```
+
+Script fetches JSON from the URL and exports to sims_data_*.xlsx with 3 test SIM records.
+ICCID numbers stored as text to preserve all digits.
+Safe demo — no private credentials used.
+If the variable is not set or fetching fails, mock data will be used automatically.
+
+
