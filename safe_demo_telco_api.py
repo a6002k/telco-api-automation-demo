@@ -1,68 +1,141 @@
+#!/usr/bin/env python3
 """
 safe_demo_telco_api.py
 
-Safe, anonymized demo script illustrating fetching SIM data (mock or demo API),
-parsing JSON, and exporting to XLSX with ICCID stored as text to preserve full digits.
+A professional demo script illustrating:
+- Securely reading configuration (API URL) from a .env file
+- Fallback to local mock data if .env is not found
+- Fetching a list of SIM cards (demo API)
+- Optional data enrichment (status per SIM)
+- Exporting to XLSX with correct ICCID formatting (as text)
 
-Requirements: pandas
-
-Example:
-    python safe_demo_telco_api.py
+Requirements: pandas, openpyxl, requests, python-dotenv
 """
 
 import os
+import requests
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, UTC
+from dotenv import load_dotenv
 
-DEMO_API_URL = os.environ.get("DEMO_API_URL", "").strip()
+# --- Load environment variables ---
+load_dotenv()
 
-def get_mock_sims():
-    return [
-        {"iccid": "8901000123456789012", "status": "active", "plan": "Data 10GB", "last_seen": "2025-10-30T12:01:00Z"},
-        {"iccid": "8901000987654321098", "status": "inactive", "plan": "Voice Only", "last_seen": "2025-09-11T09:15:00Z"},
-        {"iccid": "8901000555555555555", "status": "suspended", "plan": "IoT - Basic", "last_seen": "2025-11-01T06:21:00Z"}
+# Read URLs from .env. They will be None if not found.
+API_URL = os.getenv("DEMO_API_URL")
+STATUS_URL_TPL = os.getenv("SIM_STATUS_URL_TEMPLATE")
+
+# --- Built-in mock data (fallback if .env is not found) ---
+LOCAL_MOCK_DATA = {
+    "elements": [
+        {"iccid": "8901000123456789012", "status": "active", "plan": "Data 10GB"},
+        {"iccid": "8901000987654321098", "status": "inactive", "plan": "Voice Only"},
+        {"iccid": "8901000555555555555", "status": "suspended", "plan": "IoT - Basic"}
     ]
+}
 
-def fetch_sims_from_remote(url):
+def fetch_remote_data(api_url: str):
+    """
+    Fetches data from the remote API.
+    Returns a list of SIM dictionaries.
+    """
+    print(f"Fetching data from remote API: {api_url}...")
     try:
-        import requests
-    except Exception:
-        print("requests library not available; using mock data.")
-        return get_mock_sims()
-    try:
-        resp = requests.get(url, timeout=10)
-        resp.raise_for_status()
-        data = resp.json()
-        if isinstance(data, dict) and "elements" in data:
-            return data["elements"]
-        if isinstance(data, list):
-            return data
-        if isinstance(data, dict):
-            for v in data.values():
-                if isinstance(v, list):
-                    return v
-        return get_mock_sims()
-    except Exception as e:
-        print(f"Failed to fetch {url}: {e}; using mock data.")
-        return get_mock_sims()
+        response = requests.get(api_url, timeout=10)
+        response.raise_for_status() # Will raise an error for 4xx or 5xx status
+        data = response.json()
+        sims = data.get("elements", [])
+        print(f"Successfully fetched {len(sims)} SIM records from API.")
+        return sims
+    except requests.RequestException as e:
+        print(f"Error during API request: {e}")
+        return []
 
-def save_to_xlsx(sims, filename="sims_data.xlsx"):
+def get_local_mock_data():
+    """
+    Returns the built-in mock data.
+    """
+    print("DEMO_API_URL not found in .env. Using built-in mock data.")
+    return LOCAL_MOCK_DATA.get("elements", [])
+
+def fetch_sim_status_remote(sim, status_url_template):
+    """
+    (Optional) Fetches status for ONE SIM if
+    status_url_template is provided.
+    """
+    # {iccid} in the URL will be replaced with the actual iccid
+    url = status_url_template.replace("{iccid}", sim["iccid"])
+    try:
+        print(f"  -> Enriching data for SIM {sim['iccid']}...")
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        status_data = response.json()
+        # Update the status in our dictionary
+        sim["status"] = status_data.get("status", sim.get("status", "unknown"))
+    except requests.RequestException as e:
+        print(f"    (Failed to fetch status for {sim['iccid']}: {e})")
+    return sim
+
+def enrich_sims_with_status(sims, status_url_template):
+    """
+    Runs the list of SIMs through the data enrichment function.
+    """
+    print(f"Starting optional enrichment step...")
+    enriched = []
+    for sim in sims:
+        enriched.append(fetch_sim_status_remote(sim, status_url_template))
+    return enriched
+
+def save_to_excel(sims):
+    """
+    Saves the data to an XLSX file with a timestamp.
+    """
+    if not sims:
+        print("No data to save. Excel file not created.")
+        return
+
+    # Ensure iccid is saved as text
     df = pd.DataFrame(sims)
-    if "iccid" in df.columns:
-        df["iccid"] = df["iccid"].astype(str)
-    df.to_excel(filename, index=False)
+    df['iccid'] = df['iccid'].astype(str)
+    
+    save_name = f"sims_data_{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}.xlsx"
+    
+    # Use ExcelWriter to set column widths
+    with pd.ExcelWriter(save_name) as writer:
+        df.to_excel(writer, index=False, sheet_name="SIMs")
+        # Auto-fit columns for readability
+        for column in df:
+            column_length = max(df[column].astype(str).map(len).max(), len(column))
+            col_idx = df.columns.get_loc(column)
+            writer.sheets['SIMs'].set_column(col_idx, col_idx, column_length + 2)
+
+    print(f"Successfully saved {len(sims)} records to file: {save_name}")
+    return save_name
 
 def main():
-    if DEMO_API_URL:
-        print("DEMO_API_URL set. Attempting remote fetch...")
-        sims = fetch_sims_from_remote(DEMO_API_URL)
+    """
+    Main execution function.
+    """
+    sims = []
+    if API_URL:
+        # If URL is in .env - fetch from the web
+        sims = fetch_remote_data(API_URL)
     else:
-        print("No DEMO_API_URL; using mock data.")
-        sims = get_mock_sims()
+        # If no URL - use local data
+        sims = get_local_mock_data()
 
-    save_name = f"sims_data_{datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')}.xlsx"
-    save_to_xlsx(sims, save_name)
-    print(f"Saved {len(sims)} record(s) to {save_name}")
+    if not sims:
+        print("Could not retrieve any SIMs. Exiting.")
+        return
 
-if __name__ == '__main__':
+    # (Optional) If a status URL template is in .env - run enrichment
+    if STATUS_URL_TPL:
+        sims = enrich_sims_with_status(sims, STATUS_URL_TPL)
+    else:
+        print("SIM_STATUS_URL_TEMPLATE not set in .env. Skipping enrichment step.")
+
+    # Save to Excel
+    save_to_excel(sims)
+
+if __name__ == "__main__":
     main()
