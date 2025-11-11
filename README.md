@@ -52,30 +52,53 @@ git clone [https://github.com/a6002k/telco-api-automation-demo.git](https://gith
 cd telco-api-automation-demo
 ```
 
-#### Step 2: Install Dependencies
+#### Step 2: Create & Activate Environment
 
-(It is highly recommended to create a virtual environment first: `python -m venv venv`)
+(It is highly recommended to create a virtual environment `venv`)
 
-You must install the required libraries listed in `requirements.txt`.
+**1. Create the environment (Only ONCE):**
+```bash
+python -m venv venv
+```
+**2. Activate the environment (Do this EVERY TIME you open CMD):**
+
+*On Windows (CMD):*
+```Dos
+venv\Scripts\activate
+```
+*On Linux / Mac:*
+```bash
+source venv/bin/activate
+```
+*(You will see `(venv)` appear at the start of your command line)*
+
+#### Step 3: Install Dependencies
+
+(Make sure your environment is activated first!)
+
+You only need to do this **once** for your environment.
 ```bash
 pip install -r requirements.txt
 ```
 
-#### Step 3: Create your `.env` file
+#### Step 4: Create your `.env` file
+
+(Make sure your environment is activated!)
 
 This script reads your private API URL from a `.env` file. A template (`example.env`) is provided. You just need to copy it.
 
 *In your Windows Command Prompt:*
-```DOS
+```Dos
 copy example.env .env
 ```
 *On Linux / Mac:*
 ```bash
 cp example.env .env
 ```
-*(Now you can edit the `.env` file with your real URL if needed. The demo URL from `mocki.io` should already be inside.)*
+*(Now you can edit the `.env` file with your real URL if needed.)*
 
-#### Step 4: Run the Script
+#### Step 5: Run the Script
+(Make sure your environment is activated!)
 ```bash
 python safe_demo_telco_api.py
 ```
