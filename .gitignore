@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+# ignore environment files
+.env
+venv/
+__pycache__/
+
+# ignore generated XLSX files
+sims_data_*.xlsx
