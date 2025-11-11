@@ -73,4 +73,12 @@ ICCID numbers stored as text to preserve all digits.
 Safe demo — no private credentials used.
 If the variable is not set or fetching fails, mock data will be used automatically.
 
+---
+
+### 👤 Author
+
+**Alexander Kolbin**  
+IT Systems Specialist with 30+ years of experience (World Bank Group).  
+Recent work — Python automation for telecom API platforms.  
+Developed scripts for **Pond Mobile** to automate large-scale API requests to **Telna servers** (handling data for ~100,000 SIM cards).
 
