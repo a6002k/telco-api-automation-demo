@@ -29,13 +29,21 @@ pip install pandas openpyxl
 ```
 
 ## How to run
-## 1️⃣ Using mock data (default)
+
+### 0️⃣ Clone the repository
+
+```bash
+git clone https://github.com/a6002k/telco-api-automation-demo.git
+cd telco-api-automation-demo
+```
+
+### 1️⃣ Using mock data (default)
 
 ```bash
 python safe_demo_telco_api.py
 ```
 
-## 2️⃣ Using the working demo API
+### 2️⃣ Using the working demo API
 
 Set the environment variable DEMO_API_URL to fetch real JSON from the safe demo API.
 
