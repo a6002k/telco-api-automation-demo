@@ -1,84 +1,97 @@
-# Telecom API Automation — Safe Demo (Python)
+# Telco API Automation Demo
 
-Safe demo of Telecom API automation with Python — fetch SIM data, parse JSON, export XLSX
+**Project Status:** 🚀 Demonstration (Ready for review)
 
-This repository contains a **safe, anonymized, and runnable demo** that illustrates how to automate
-REST API interactions typical for telecom / SIM-management integrations (fetching SIM lists, parsing JSON, exporting XLSX).
-
-**Important:** This demo **does not** contain any real credentials or private endpoints. It runs offline
-using built-in mock data by default.
-
-## Files in this repository
-
-- `safe_demo_telco_api.py` — main demo script. Uses mock data if no `DEMO_API_URL` environment variable is set.
-- `demo_output.txt` — example output from running the script.
-- `.gitignore` — ignores environment files and local artifacts.
-- `LICENSE` — MIT license.
-- `sims_data_*.xlsx` — sample XLSX files generated when running the script.
-
-## Requirements
-
-- Python 3.8+
-- pandas
-- openpyxl (for XLSX export)
-
-Install dependencies:
-
-```bash
-pip install pandas openpyxl
-```
-
-## Get the repository
-
-### 1️⃣ Using Git (recommended if Git is installed)
-```bash
-git clone https://github.com/a6002k/telco-api-automation-demo.git
-cd telco-api-automation-demo
-```
-### 2️⃣ Download ZIP (if Git is not installed)
-- Go to the repository page: https://github.com/a6002k/telco-api-automation-demo
-- Click Code → Download ZIP
-- Unzip the downloaded file to any folder
-- Open CMD or PowerShell and navigate to the folder:
-```cmd
-cd path\to\unzipped\folder
-```
-
-## How to run
-
-### 1️⃣ Using mock data (default)
-
-```bash
-python safe_demo_telco_api.py
-```
-
-### 2️⃣ Using the working demo API
-
-Set the environment variable DEMO_API_URL to fetch real JSON from the safe demo API.
-
-**Windows CMD:**
-```bash
-set DEMO_API_URL=https://mocki.io/v1/d1b5ec31-b1cb-4a7c-88ef-4307cfd17aa8
-python safe_demo_telco_api.py
-```
-
-**Linux / Mac:**
-```bash
-export DEMO_API_URL="https://mocki.io/v1/d1b5ec31-b1cb-4a7c-88ef-4307cfd17aa8"
-python safe_demo_telco_api.py
-```
-
-Script fetches JSON from the URL and exports to sims_data_*.xlsx with 3 test SIM records.
-ICCID numbers stored as text to preserve all digits.
-Safe demo — no private credentials used.
-If the variable is not set or fetching fails, mock data will be used automatically.
+This repository demonstrates skills in automating API requests for the telecommunications industry. The code here is a **demonstration of capability**, based on real commercial experience.
 
 ---
 
-### 👤 Author
+### Business Case
 
-**Alexander Kolbin**  
-IT Systems Specialist with 30+ years of experience (World Bank Group).  
-Recent work — Python automation for telecom API platforms.  
-Developed scripts for **Pond Mobile** to automate large-scale API requests to **Telna servers** (handling data for ~100,000 SIM cards).
+In the telecom industry (especially MVNO/IoT), there is a constant need to automate a wide range of tasks:
 
+* Activating/deactivating SIM cards
+* Checking a SIM's balance and status
+* Topping up data or credit
+* Pulling data usage statistics (CDRs)
+* Bulk-updating information for thousands of devices
+
+This demo project shows **how I approach solving these problems** using Python. It **specifically demonstrates** the core task of:
+1.  Securely handling API credentials.
+2.  Fetching data from an API endpoint.
+3.  Exporting that data into a business-friendly Excel report.
+
+This same logic can be expanded to automate any of the other tasks listed above.
+
+---
+
+### 🛠️ Tech Stack
+
+* **Python**
+* **Requests:** For making HTTP requests
+* **Pandas:** For data manipulation and Excel exporting
+* **Openpyxl:** The engine for writing `.xlsx` files
+* **Python-dotenv:** For securely managing configuration (API URLs, keys)
+
+---
+
+### 🚀 How to Run This Demo
+
+#### Step 1: Get the Code
+
+You have two options.
+
+**Option A: Download ZIP (Easiest, no Git needed)**
+1.  On this GitHub page, click the green **`< > Code`** button.
+2.  Select **`Download ZIP`**.
+3.  Unzip the file to a folder on your computer.
+
+**Option B: Git Clone (For developers)**
+```bash
+git clone [https://github.com/a6002k/telco-api-automation-demo.git](https://github.com/a6002k/telco-api-automation-demo.git)
+cd telco-api-automation-demo
+```
+
+#### Step 2: Install Dependencies
+
+(It is highly recommended to create a virtual environment first: `python -m venv venv`)
+
+You must install the required libraries listed in `requirements.txt`.
+```bash
+pip install -r requirements.txt
+```
+
+#### Step 3: Create your `.env` file
+
+This script reads your private API URL from a `.env` file. A template (`example.env`) is provided. You just need to copy it.
+
+*In your Windows Command Prompt:*
+```bash
+copy example.env .env
+```
+*On Linux / Mac:*
+```bash
+cp example.env .env
+```
+*(Now you can edit the `.env` file with your real URL if needed. The demo URL from `mocki.io` should already be inside.)*
+
+#### Step 4: Run the Script
+```bash
+python safe_demo_telco_api.py
+```
+---
+
+### ⚙️ How It Works
+
+* **If `DEMO_API_URL` is found in `.env`:** The script will attempt to fetch live data from that URL.
+* **If `DEMO_API_URL` is not found:** The script will run in **"safe mode"** using built-in mock data (you won't see any network requests).
+* **Result:** An `.xlsx` file (e.g., `sims_data_20251111T161700Z.xlsx`) will be created in the folder.
+
+---
+
+### ⭐ Hire Me
+
+I am available for freelance projects (fixed-price, hourly) in API automation, integration, and Python backend development.
+
+* **Upwork Profile:** [YOUR UPWORK PROFILE LINK HERE]
+* **Email:** [YOUR EMAIL HERE]
