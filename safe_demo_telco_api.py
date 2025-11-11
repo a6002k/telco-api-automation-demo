@@ -17,6 +17,7 @@ import requests
 import pandas as pd
 from datetime import datetime, UTC
 from dotenv import load_dotenv
+from openpyxl.utils import get_column_letter
 
 # --- Load environment variables ---
 load_dotenv()
@@ -89,6 +90,7 @@ def enrich_sims_with_status(sims, status_url_template):
 def save_to_excel(sims):
     """
     Saves the data to an XLSX file with a timestamp.
+    (This version is corrected to auto-fit columns)
     """
     if not sims:
         print("No data to save. Excel file not created.")
@@ -101,13 +103,20 @@ def save_to_excel(sims):
     save_name = f"sims_data_{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}.xlsx"
     
     # Use ExcelWriter to set column widths
-    with pd.ExcelWriter(save_name) as writer:
+    with pd.ExcelWriter(save_name, engine='openpyxl') as writer:
         df.to_excel(writer, index=False, sheet_name="SIMs")
+        
+        # --- ИСПРАВЛЕННЫЙ БЛОК ---
         # Auto-fit columns for readability
-        for column in df:
-            column_length = max(df[column].astype(str).map(len).max(), len(column))
-            col_idx = df.columns.get_loc(column)
-            writer.sheets['SIMs'].set_column(col_idx, col_idx, column_length + 2)
+        worksheet = writer.sheets['SIMs']
+        for col_idx, column in enumerate(df.columns):
+            # Find the max length in the column
+            column_length = max(df[column].astype(str).map(len).max(), len(column)) + 2
+            # Convert the 0-based index to a 1-based letter (e.g., 0 -> 'A')
+            col_letter = get_column_letter(col_idx + 1)
+            # Set the width using the column letter
+            worksheet.column_dimensions[col_letter].width = column_length
+        # --- КОНЕЦ ИСПРАВЛЕНИЯ ---
 
     print(f"Successfully saved {len(sims)} records to file: {save_name}")
     return save_name
