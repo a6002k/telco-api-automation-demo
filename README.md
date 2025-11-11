@@ -1,5 +1,7 @@
 # Telecom API Automation — Safe Demo (Python)
 
+Safe demo of Telecom API automation with Python — fetch SIM data, parse JSON, export XLSX
+
 This repository contains a **safe, anonymized, and runnable demo** that illustrates how to automate
 REST API interactions typical for telecom / SIM-management integrations (fetching SIM lists, parsing JSON, exporting XLSX).
 
