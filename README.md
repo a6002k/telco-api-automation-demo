@@ -57,14 +57,12 @@ python safe_demo_telco_api.py
 Set the environment variable DEMO_API_URL to fetch real JSON from the safe demo API.
 
 **Windows CMD:**
-
 ```bash
 set DEMO_API_URL=https://mocki.io/v1/d1b5ec31-b1cb-4a7c-88ef-4307cfd17aa8
 python safe_demo_telco_api.py
 ```
 
 **Linux / Mac:**
-
 ```bash
 export DEMO_API_URL="https://mocki.io/v1/d1b5ec31-b1cb-4a7c-88ef-4307cfd17aa8"
 python safe_demo_telco_api.py
