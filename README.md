@@ -48,7 +48,7 @@ You have two options.
 
 **Option B: Git Clone (For developers)**
 ```bash
-git clone [https://github.com/a6002k/telco-api-automation-demo.git](https://github.com/a6002k/telco-api-automation-demo.git)
+git clone https://github.com/a6002k/telco-api-automation-demo.git
 cd telco-api-automation-demo
 ```
 
