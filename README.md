@@ -116,5 +116,5 @@ python safe_demo_telco_api.py
 
 I am available for freelance projects (fixed-price, hourly) in API automation, integration, and Python backend development.
 
-* **Upwork Profile:** [MY UPWORK PROFILE LINK HERE]
-* **Email:** [alex2000kg@gmail.com]
+* **Upwork Profile:** https://www.upwork.com/freelancers/~01dcc48e27dd726345
+* **Email:** alex2000kg@gmail.com
